@@ -820,25 +820,27 @@
         </div>
         <!-- Right: form -->
         <div class="reveal">
-          <form class="contact-form" onsubmit="handleSubmit(event)">
+          <form class="contact-form" name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="booking" />
+            <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
             <div class="form-row">
               <div class="f-group">
                 <label for="name">Your Name</label>
-                <input type="text" id="name" placeholder="Jane Smith" required />
+                <input type="text" id="name" name="name" placeholder="Jane Smith" required />
               </div>
               <div class="f-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="jane@venue.com" required />
+                <input type="email" id="email" name="email" placeholder="jane@venue.com" required />
               </div>
             </div>
             <div class="form-row">
               <div class="f-group">
                 <label for="phone">Phone</label>
-                <input type="tel" id="phone" placeholder="+1 (555) 000-0000" />
+                <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" />
               </div>
               <div class="f-group">
                 <label for="etype">Event Type</label>
-                <select id="etype">
+                <select id="etype" name="event-type">
                   <option value="">Select...</option>
                   <option>Bar / Club Night</option>
                   <option>Festival</option>
@@ -850,11 +852,11 @@
             </div>
             <div class="f-group">
               <label for="venue">Venue &amp; Location</label>
-              <input type="text" id="venue" placeholder="Bell's Brewery, Kalamazoo MI" />
+              <input type="text" id="venue" name="venue" placeholder="Bell's Brewery, Kalamazoo MI" />
             </div>
             <div class="f-group">
               <label for="msg">Tell Us About Your Event</label>
-              <textarea id="msg" placeholder="Date, expected crowd, stage details, budget..."></textarea>
+              <textarea id="msg" name="message" placeholder="Date, expected crowd, stage details, budget..."></textarea>
             </div>
             <div class="form-submit">
               <button type="submit" class="btn btn-primary">Send Booking Inquiry</button>
@@ -913,14 +915,6 @@
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-    // Form
-    function handleSubmit(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type=submit]');
-      btn.textContent = '✓ Sent! We\'ll be in touch.';
-      btn.style.background = '#1a6e1a';
-      btn.disabled = true;
-    }
   </script>
 </body>
 </html>
