@@ -315,6 +315,7 @@
     .g-item:nth-child(3) { grid-column: span 3; }
     .g-item:nth-child(4) { grid-column: span 3; }
     .g-item:nth-child(5) { grid-column: span 4; }
+    .g-item:nth-child(n+6) { grid-column: span 4; }
     .g-item img {
       width: 100%; height: 100%;
       object-fit: cover;
@@ -660,7 +661,7 @@
     </div>
     <div class="lightbox-footer">
       <span class="lightbox-counter" id="lightbox-counter"></span>
-      <span class="lightbox-credit">Photo &copy; <a href="https://gbrooksphotography.com/" target="_blank" rel="noopener">Gerald Brooks · GViews Photography</a></span>
+      <span class="lightbox-credit" id="lightbox-credit"></span>
     </div>
   </div>
 
@@ -753,34 +754,7 @@
       <h2 class="section-title">Live &amp; In The Wild</h2>
       <div class="title-divider"></div>
     </div>
-    <div class="gallery-grid">
-      <div class="g-item" onclick="openLightbox(0)">
-        <img src="images/FB_IMG_1772992885999.jpg" alt="OCD/C live" />
-        <div class="g-overlay"><i class="fa fa-expand"></i></div>
-        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
-      </div>
-      <div class="g-item" onclick="openLightbox(1)">
-        <img src="images/FB_IMG_1772992901396.jpg" alt="OCD/C live" />
-        <div class="g-overlay"><i class="fa fa-expand"></i></div>
-        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
-      </div>
-      <div class="g-item" onclick="openLightbox(2)">
-        <img src="images/FB_IMG_1772992908440.jpg" alt="OCD/C live" />
-        <div class="g-overlay"><i class="fa fa-expand"></i></div>
-        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
-      </div>
-      <div class="g-item" onclick="openLightbox(3)">
-        <img src="images/FB_IMG_1772992938812.jpg" alt="OCD/C live" />
-        <div class="g-overlay"><i class="fa fa-expand"></i></div>
-        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
-      </div>
-      <div class="g-item" onclick="openLightbox(4)">
-        <img src="images/FB_IMG_1772992960242.jpg" alt="OCD/C live" />
-        <div class="g-overlay"><i class="fa fa-expand"></i></div>
-        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
-      </div>
-    </div>
-    <p class="gallery-credit-bar">Photos by <a href="https://gbrooksphotography.com/" target="_blank" rel="noopener">Gerald Brooks · GViews Photography</a></p>
+    <div class="gallery-grid" id="galleryGrid"></div>
   </section>
 
   <!-- VIDEO -->
@@ -990,14 +964,50 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Lightbox with navigation
+    // ── GALLERY PHOTOS ─────────────────────────────────────────────
+    // Each photo is an object with:
+    //   src       - path to the image file (required)
+    //   credit    - photographer name, or '' for no credit
+    //   creditUrl - link to photographer's site, or '' for no link
+    //
+    // To add a new Gerald Brooks photo:
+    //   { src: 'images/yourphoto.jpg', credit: 'Gerald Brooks · GViews Photography', creditUrl: 'https://gbrooksphotography.com/' }
+    //
+    // To add a photo with no credit:
+    //   { src: 'images/yourphoto.jpg', credit: '', creditUrl: '' }
+    // ────────────────────────────────────────────────────────────────
     const galleryPhotos = [
-      'images/FB_IMG_1772992885999.jpg',
-      'images/FB_IMG_1772992901396.jpg',
-      'images/FB_IMG_1772992908440.jpg',
-      'images/FB_IMG_1772992938812.jpg',
-      'images/FB_IMG_1772992960242.jpg'
+      { src: 'images/FB_IMG_1772992885999.jpg', credit: 'Gerald Brooks · GViews Photography', creditUrl: 'https://gbrooksphotography.com/' },
+      { src: 'images/FB_IMG_1772992901396.jpg', credit: 'Gerald Brooks · GViews Photography', creditUrl: 'https://gbrooksphotography.com/' },
+      { src: 'images/FB_IMG_1772992908440.jpg', credit: 'Gerald Brooks · GViews Photography', creditUrl: 'https://gbrooksphotography.com/' },
+      { src: 'images/FB_IMG_1772992938812.jpg', credit: 'Gerald Brooks · GViews Photography', creditUrl: 'https://gbrooksphotography.com/' },
+      { src: 'images/FB_IMG_1772992960242.jpg', credit: 'Gerald Brooks · GViews Photography', creditUrl: 'https://gbrooksphotography.com/' },
     ];
+
+    // Build gallery grid from the array above
+    function buildGallery() {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      galleryPhotos.forEach((photo, i) => {
+        const item = document.createElement('div');
+        item.className = 'g-item';
+        item.addEventListener('click', () => openLightbox(i));
+        const creditHtml = photo.credit
+          ? `<div class="photo-credit">${
+              photo.creditUrl
+                ? `<a href="${photo.creditUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">© ${photo.credit}</a>`
+                : `© ${photo.credit}`
+            }</div>`
+          : '';
+        item.innerHTML = `
+          <img src="${photo.src}" alt="OCD/C live" loading="lazy" />
+          <div class="g-overlay"><i class="fa fa-expand"></i></div>
+          ${creditHtml}`;
+        grid.appendChild(item);
+      });
+    }
+    buildGallery();
+
     let currentPhoto = 0;
 
     function openLightbox(index) {
@@ -1013,14 +1023,25 @@
     }
 
     function updateLightbox() {
+      const photo = galleryPhotos[currentPhoto];
       const img = document.getElementById('lightbox-img');
       img.classList.add('fading');
       setTimeout(() => {
-        img.src = galleryPhotos[currentPhoto];
+        img.src = photo.src;
         img.classList.remove('fading');
       }, 150);
       document.getElementById('lightbox-counter').textContent =
         (currentPhoto + 1) + ' / ' + galleryPhotos.length;
+      // Update credit dynamically per photo
+      const creditEl = document.getElementById('lightbox-credit');
+      if (photo.credit) {
+        creditEl.style.display = '';
+        creditEl.innerHTML = photo.creditUrl
+          ? `Photo &copy; <a href="${photo.creditUrl}" target="_blank" rel="noopener">${photo.credit}</a>`
+          : `Photo &copy; ${photo.credit}`;
+      } else {
+        creditEl.style.display = 'none';
+      }
     }
 
     function changePhoto(dir) {
