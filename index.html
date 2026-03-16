@@ -670,14 +670,28 @@
     .form-note { text-align: center; font-size: 0.75rem; color: var(--grey); margin-top: 8px; }
 
     /* ── SHOUTOUTS ────────────────────────────────────────── */
-    #shoutouts { background: var(--black); }
-    .shoutouts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    #shoutouts { background: var(--black); overflow: hidden; }
+    .shoutouts-track-wrap {
+      overflow: hidden;
+      position: relative;
+      /* Fade edges so cards glide in/out smoothly */
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 93%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, black 7%, black 93%, transparent 100%);
+    }
+    .shoutouts-track {
+      display: flex;
       gap: 20px;
-      margin-top: 0;
+      width: max-content;
+      animation: scrollCards var(--scroll-duration, 30s) linear infinite;
+    }
+    .shoutouts-track:hover { animation-play-state: paused; }
+    @keyframes scrollCards {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
     .shoutout-card {
+      width: 270px;
+      flex-shrink: 0;
       background: var(--card);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 3px;
@@ -1033,7 +1047,9 @@
       <p class="section-label">People We Love</p>
       <h2 class="section-title">Shoutouts</h2>
       <div class="title-divider"></div>
-      <div class="shoutouts-grid reveal" id="shoutoutsGrid"></div>
+    </div>
+    <div class="shoutouts-track-wrap">
+      <div class="shoutouts-track" id="shoutoutsTrack"></div>
     </div>
   </section>
 
@@ -1319,28 +1335,34 @@
       'fa-microphone': 'fas fa-microphone',
     };
 
+    function makeCard(s) {
+      const iconClass = iconMap[s.icon] || ('fas ' + s.icon);
+      const linkHtml = s.url
+        ? `<a href="${s.url}" class="shoutout-link" target="_blank" rel="noopener">Visit <i class="fas fa-arrow-right" style="font-size:0.65rem;"></i></a>`
+        : '';
+      const card = document.createElement('div');
+      card.className = 'shoutout-card';
+      card.innerHTML = `
+        <div class="shoutout-icon"><i class="${iconClass}"></i></div>
+        <div class="shoutout-cat">${s.category}</div>
+        <div class="shoutout-name">${s.name}</div>
+        ${s.sub  ? `<div class="shoutout-sub">${s.sub}</div>`   : ''}
+        ${s.desc ? `<div class="shoutout-desc">${s.desc}</div>` : ''}
+        ${linkHtml}`;
+      return card;
+    }
+
     function buildShoutouts() {
-      const grid = document.getElementById('shoutoutsGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      shoutouts.forEach(s => {
-        const iconClass = iconMap[s.icon] || ('fas ' + s.icon);
-        const linkHtml = s.url
-          ? `<a href="${s.url}" class="shoutout-link" target="_blank" rel="noopener">Visit <i class="fas fa-arrow-right" style="font-size:0.65rem;"></i></a>`
-          : '';
-        const card = document.createElement('div');
-        card.className = 'shoutout-card reveal';
-        card.innerHTML = `
-          <div class="shoutout-icon"><i class="${iconClass}"></i></div>
-          <div class="shoutout-cat">${s.category}</div>
-          <div class="shoutout-name">${s.name}</div>
-          ${s.sub ? `<div class="shoutout-sub">${s.sub}</div>` : ''}
-          ${s.desc ? `<div class="shoutout-desc">${s.desc}</div>` : ''}
-          ${linkHtml}`;
-        grid.appendChild(card);
-      });
-      // Re-run reveal observer on new cards
-      grid.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+      const track = document.getElementById('shoutoutsTrack');
+      if (!track) return;
+      track.innerHTML = '';
+      // Render each card twice for seamless loop
+      [...shoutouts, ...shoutouts].forEach(s => track.appendChild(makeCard(s)));
+      // Set scroll speed: ~280px per card per second feels comfortable
+      const duration = Math.max(shoutouts.length * 5, 20);
+      track.style.setProperty('--scroll-duration', duration + 's');
+      track.parentElement.style.setProperty('--scroll-duration', duration + 's');
+      track.style.animationDuration = duration + 's';
     }
     buildShoutouts();
 
