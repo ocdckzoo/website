@@ -332,21 +332,94 @@
     .g-overlay i { color: white; font-size: 1.5rem; opacity: 0; transition: opacity 0.3s; }
     .g-item:hover .g-overlay i { opacity: 1; }
 
+    /* Photo credit */
+    .g-item .photo-credit {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      padding: 20px 10px 8px;
+      font-size: 0.68rem;
+      font-family: var(--font-head);
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.55);
+      text-align: right;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .g-item .photo-credit a { color: rgba(255,255,255,0.65); text-decoration: none; }
+    .g-item .photo-credit a:hover { color: var(--orange); }
+    .g-item:hover .photo-credit { opacity: 1; }
+    .gallery-credit-bar {
+      text-align: right;
+      padding: 10px 6px 0;
+      font-size: 0.72rem;
+      font-family: var(--font-head);
+      letter-spacing: 1px;
+      color: var(--grey);
+    }
+    .gallery-credit-bar a { color: var(--orange); text-decoration: none; }
+    .gallery-credit-bar a:hover { text-decoration: underline; }
+
     /* Lightbox */
     .lightbox {
       position: fixed; inset: 0; z-index: 9000;
-      background: rgba(0,0,0,0.95);
-      display: none; align-items: center; justify-content: center;
-      padding: 20px;
+      background: rgba(0,0,0,0.96);
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
     }
     .lightbox.open { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; }
-    .lightbox-close {
-      position: absolute; top: 20px; right: 24px;
-      font-size: 2rem; color: white; cursor: pointer; opacity: 0.7;
+    .lightbox-img-wrap {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; flex: 1;
+      padding: 60px 70px 20px;
+    }
+    .lightbox img {
+      max-width: 100%; max-height: 80vh;
+      object-fit: contain;
       transition: opacity 0.2s;
+      user-select: none;
+    }
+    .lightbox img.fading { opacity: 0; }
+    .lightbox-close {
+      position: absolute; top: 16px; right: 20px;
+      font-size: 1.8rem; color: white; cursor: pointer; opacity: 0.6;
+      transition: opacity 0.2s; z-index: 2; line-height: 1;
     }
     .lightbox-close:hover { opacity: 1; }
+    .lightbox-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem;
+      cursor: pointer; opacity: 0.7;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .lightbox-arrow:hover { background: var(--red); border-color: var(--red); opacity: 1; }
+    .lightbox-arrow.prev { left: 14px; }
+    .lightbox-arrow.next { right: 14px; }
+    .lightbox-footer {
+      width: 100%;
+      padding: 10px 20px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .lightbox-counter {
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.4);
+    }
+    .lightbox-credit {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+    }
+    .lightbox-credit a { color: var(--orange); text-decoration: none; }
+    .lightbox-credit a:hover { text-decoration: underline; }
 
     /* ── VIDEO ────────────────────────────────────────────── */
     .video-embed-wrap {
@@ -578,9 +651,17 @@
 <body>
 
   <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close"><i class="fa fa-times"></i></span>
-    <img id="lightbox-img" src="" alt="" />
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-times"></i></span>
+    <div class="lightbox-img-wrap">
+      <div class="lightbox-arrow prev" onclick="changePhoto(-1)"><i class="fa fa-chevron-left"></i></div>
+      <img id="lightbox-img" src="" alt="" />
+      <div class="lightbox-arrow next" onclick="changePhoto(1)"><i class="fa fa-chevron-right"></i></div>
+    </div>
+    <div class="lightbox-footer">
+      <span class="lightbox-counter" id="lightbox-counter"></span>
+      <span class="lightbox-credit">Photo &copy; <a href="https://gbrooksphotography.com/" target="_blank" rel="noopener">Gerald Brooks · GViews Photography</a></span>
+    </div>
   </div>
 
   <!-- NAV -->
@@ -673,27 +754,33 @@
       <div class="title-divider"></div>
     </div>
     <div class="gallery-grid">
-      <div class="g-item" onclick="openLightbox('images/FB_IMG_1772992885999.jpg')">
+      <div class="g-item" onclick="openLightbox(0)">
         <img src="images/FB_IMG_1772992885999.jpg" alt="OCD/C live" />
         <div class="g-overlay"><i class="fa fa-expand"></i></div>
+        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
       </div>
-      <div class="g-item" onclick="openLightbox('images/FB_IMG_1772992901396.jpg')">
+      <div class="g-item" onclick="openLightbox(1)">
         <img src="images/FB_IMG_1772992901396.jpg" alt="OCD/C live" />
         <div class="g-overlay"><i class="fa fa-expand"></i></div>
+        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
       </div>
-      <div class="g-item" onclick="openLightbox('images/FB_IMG_1772992908440.jpg')">
+      <div class="g-item" onclick="openLightbox(2)">
         <img src="images/FB_IMG_1772992908440.jpg" alt="OCD/C live" />
         <div class="g-overlay"><i class="fa fa-expand"></i></div>
+        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
       </div>
-      <div class="g-item" onclick="openLightbox('images/FB_IMG_1772992938812.jpg')">
+      <div class="g-item" onclick="openLightbox(3)">
         <img src="images/FB_IMG_1772992938812.jpg" alt="OCD/C live" />
         <div class="g-overlay"><i class="fa fa-expand"></i></div>
+        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
       </div>
-      <div class="g-item" onclick="openLightbox('images/FB_IMG_1772992960242.jpg')">
+      <div class="g-item" onclick="openLightbox(4)">
         <img src="images/FB_IMG_1772992960242.jpg" alt="OCD/C live" />
         <div class="g-overlay"><i class="fa fa-expand"></i></div>
+        <div class="photo-credit"><a href="https://gbrooksphotography.com/" target="_blank" rel="noopener" onclick="event.stopPropagation()">© Gerald Brooks · GViews Photography</a></div>
       </div>
     </div>
+    <p class="gallery-credit-bar">Photos by <a href="https://gbrooksphotography.com/" target="_blank" rel="noopener">Gerald Brooks · GViews Photography</a></p>
   </section>
 
   <!-- VIDEO -->
@@ -903,17 +990,66 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Lightbox
-    function openLightbox(src) {
-      document.getElementById('lightbox-img').src = src;
+    // Lightbox with navigation
+    const galleryPhotos = [
+      'images/FB_IMG_1772992885999.jpg',
+      'images/FB_IMG_1772992901396.jpg',
+      'images/FB_IMG_1772992908440.jpg',
+      'images/FB_IMG_1772992938812.jpg',
+      'images/FB_IMG_1772992960242.jpg'
+    ];
+    let currentPhoto = 0;
+
+    function openLightbox(index) {
+      currentPhoto = index;
+      updateLightbox();
       document.getElementById('lightbox').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
+
     function closeLightbox() {
       document.getElementById('lightbox').classList.remove('open');
       document.body.style.overflow = '';
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    function updateLightbox() {
+      const img = document.getElementById('lightbox-img');
+      img.classList.add('fading');
+      setTimeout(() => {
+        img.src = galleryPhotos[currentPhoto];
+        img.classList.remove('fading');
+      }, 150);
+      document.getElementById('lightbox-counter').textContent =
+        (currentPhoto + 1) + ' / ' + galleryPhotos.length;
+    }
+
+    function changePhoto(dir) {
+      currentPhoto = (currentPhoto + dir + galleryPhotos.length) % galleryPhotos.length;
+      updateLightbox();
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'Escape')     closeLightbox();
+      if (e.key === 'ArrowRight') changePhoto(1);
+      if (e.key === 'ArrowLeft')  changePhoto(-1);
+    });
+
+    // Click outside image to close
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closeLightbox();
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    document.getElementById('lightbox').addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    document.getElementById('lightbox').addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) changePhoto(diff > 0 ? 1 : -1);
+    }, { passive: true });
 
   </script>
 </body>
