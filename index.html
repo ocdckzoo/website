@@ -84,6 +84,64 @@
     }
     .btn-outline:hover { border-color: var(--white); transform: translateY(-2px); }
 
+    /* ── SOCIAL SIDEBAR ───────────────────────────────────── */
+    .social-sidebar {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .social-sidebar a {
+      width: 46px;
+      height: 46px;
+      background: rgba(12,12,12,0.88);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-right: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.45);
+      font-size: 1rem;
+      transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+      backdrop-filter: blur(8px);
+      position: relative;
+    }
+    .social-sidebar a:first-child { border-radius: 4px 0 0 0; }
+    .social-sidebar a:last-child  { border-radius: 0 0 0 4px; }
+    .social-sidebar a:not(:last-child) { border-bottom: none; }
+    .social-sidebar a:hover {
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      color: white;
+      border-color: transparent;
+      transform: translateX(-5px);
+    }
+    /* Tooltip label on hover */
+    .social-sidebar a::before {
+      content: attr(data-label);
+      position: absolute;
+      right: calc(100% + 10px);
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.85);
+      color: var(--white);
+      font-family: var(--font-head);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 2px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
+    .social-sidebar a:hover::before { opacity: 1; }
+    @media (max-width: 640px) { .social-sidebar { display: none; } }
+
     /* ── NAV ──────────────────────────────────────────────── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -738,6 +796,22 @@
   </style>
 </head>
 <body>
+
+  <!-- SOCIAL SIDEBAR -->
+  <div class="social-sidebar">
+    <a href="https://www.facebook.com/OCDCKZOO/" target="_blank" rel="noopener" data-label="Facebook" title="Facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="https://instagram.com/ocdckzoo" target="_blank" rel="noopener" data-label="Instagram" title="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://tiktok.com/@ocdckzoo" target="_blank" rel="noopener" data-label="TikTok" title="TikTok">
+      <i class="fab fa-tiktok"></i>
+    </a>
+    <a href="https://www.threads.com/@ocdckzoo" target="_blank" rel="noopener" data-label="Threads" title="Threads">
+      <i class="fab fa-threads"></i>
+    </a>
+  </div>
 
   <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
