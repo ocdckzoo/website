@@ -143,6 +143,10 @@
       transition: opacity 0.15s;
     }
     .social-sidebar a:hover::before { opacity: 1; }
+    .social-sidebar a.bit:hover {
+      background: #1da0c3;
+      border-color: transparent;
+    }
     @media (max-width: 640px) { .social-sidebar { display: none; } }
 
     /* ── NAV ──────────────────────────────────────────────── */
@@ -834,8 +838,13 @@
     <a href="https://tiktok.com/@ocdckzoo" target="_blank" rel="noopener" data-label="TikTok" title="TikTok">
       <i class="fab fa-tiktok"></i>
     </a>
-    <a href="https://www.threads.com/@ocdckzoo" target="_blank" rel="noopener" data-label="Threads" title="Threads">
-      <i class="fab fa-threads"></i>
+    <a href="https://www.bandsintown.com/a/636902-ocdc" target="_blank" rel="noopener" data-label="Bandsintown" title="Follow on Bandsintown" class="bit">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="22" height="22" fill="currentColor">
+        <rect x="4"  y="4"  width="9" height="32"/>
+        <rect x="4"  y="4"  width="32" height="9"/>
+        <rect x="4"  y="19" width="24" height="8"/>
+        <rect x="27" y="19" width="9"  height="17"/>
+      </svg>
     </a>
   </div>
 
