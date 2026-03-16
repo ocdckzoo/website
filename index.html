@@ -481,15 +481,24 @@
     .lightbox-credit a:hover { text-decoration: underline; }
 
     /* ── VIDEO ────────────────────────────────────────────── */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
     .video-embed-wrap {
       display: flex;
       justify-content: center;
+      overflow: hidden;
     }
     .video-embed-wrap .fb-video,
     .video-embed-wrap .fb-video span,
     .video-embed-wrap .fb-video iframe {
       max-width: 100% !important;
       border-radius: 4px;
+    }
+    @media (max-width: 760px) {
+      .videos-grid { grid-template-columns: 1fr; }
     }
 
     /* ── MARQUEE STRIP ────────────────────────────────────── */
@@ -924,22 +933,36 @@
   <section id="video" style="background: var(--dark);">
     <div class="container">
       <p class="section-label">Watch</p>
-      <h2 class="section-title">Live From Bell's Brewery</h2>
+      <h2 class="section-title">Catch Us Live</h2>
       <div class="title-divider"></div>
-      <div class="video-embed-wrap reveal">
-        <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous"
-          src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0">
-        </script>
-        <div class="fb-video"
-          data-href="https://www.facebook.com/100080474239573/videos/1645887069934652/"
-          data-width="700"
-          data-show-text="false"
-          data-allowfullscreen="true">
-          <a href="https://www.facebook.com/100080474239573/videos/1645887069934652/" target="_blank" rel="noopener"
-            style="color:var(--orange); font-family:var(--font-head); letter-spacing:2px;">
-            ▶ Watch on Facebook
-          </a>
+      <div id="fb-root"></div>
+      <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0">
+      </script>
+      <div class="videos-grid reveal">
+        <div class="video-embed-wrap">
+          <div class="fb-video"
+            data-href="https://www.facebook.com/100080474239573/videos/1645887069934652/"
+            data-width="500"
+            data-show-text="false"
+            data-allowfullscreen="true">
+            <a href="https://www.facebook.com/100080474239573/videos/1645887069934652/" target="_blank" rel="noopener"
+              style="color:var(--orange); font-family:var(--font-head); letter-spacing:2px;">
+              ▶ Watch on Facebook
+            </a>
+          </div>
+        </div>
+        <div class="video-embed-wrap">
+          <div class="fb-video"
+            data-href="https://www.facebook.com/watch/?v=654132949710208"
+            data-width="500"
+            data-show-text="false"
+            data-allowfullscreen="true">
+            <a href="https://www.facebook.com/watch/?v=654132949710208" target="_blank" rel="noopener"
+              style="color:var(--orange); font-family:var(--font-head); letter-spacing:2px;">
+              ▶ Watch on Facebook
+            </a>
+          </div>
         </div>
       </div>
     </div>
