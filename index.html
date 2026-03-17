@@ -26,14 +26,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-      <!-- Open Graph / Facebook link preview -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:url"         content="https://ocdckzoo.com/" />
-  <meta property="og:title"       content="OCD/C – The Ultimate Bon Scott Era AC/DC Tribute" />
-  <meta property="og:description" content="Kalamazoo's premier AC/DC Bon Scott era tribute. Loud, raw, and a rockin good time. Catch us live across Michigan and the Midwest." />
-  <meta property="og:image"       content="https://ocdckzoo.com/images/og-image.jpg" />
-  <meta property="og:image:width"  content="1200" />
-  <meta property="og:image:height" content="630" />
     /* ── RESET & BASE ─────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -977,6 +969,11 @@
       <div class="title-divider"></div>
     </div>
     <div class="gallery-grid" id="galleryGrid"></div>
+    <div style="text-align:center; padding: 28px 20px 0;">
+      <button onclick="openLightbox(0)" class="btn btn-outline" style="font-size:0.8rem; padding:12px 32px;" id="viewAllBtn">
+        View All Photos
+      </button>
+    </div>
   </section>
 
   <!-- VIDEO -->
@@ -1246,11 +1243,11 @@
       { src: 'images/649831506_3389348831230154_1106560730140634840_n.jpg', credit: 'Gerald Brooks · GViews Photography', creditUrl: 'https://gbrooksphotography.com/' },
     ];
 
-    // Build gallery grid from the array above
+    // Build gallery grid from the array above (first 5 only; lightbox navigates all)
     function buildGallery() {
       const grid = document.getElementById('galleryGrid');
       grid.innerHTML = '';
-      galleryPhotos.forEach((photo, i) => {
+      galleryPhotos.slice(0, 5).forEach((photo, i) => {
         const item = document.createElement('div');
         item.className = 'g-item';
         item.addEventListener('click', () => openLightbox(i));
@@ -1269,6 +1266,9 @@
       });
     }
     buildGallery();
+    // Update "View All" button with total count
+    const viewAllBtn = document.getElementById('viewAllBtn');
+    if (viewAllBtn) viewAllBtn.textContent = `View All ${galleryPhotos.length} Photos`;
 
     let currentPhoto = 0;
 
